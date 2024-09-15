@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>House Price Prediction</h1>
+    <form id="predictionForm">
+        <input type="number" id="area" placeholder="Area (sqft)" required>
+        <input type="number" id="bedrooms" placeholder="Bedrooms" required>
+        <input type="number" id="bathrooms" placeholder="Bathrooms" required>
+        <button type="submit">Predict Price</button>
+    </form>
+    <div id="prediction-result"></div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const area = document.getElementById('area').value;
+            const bedrooms = document.getElementById('bedrooms').value;
+            const bathrooms = document.getElementById('bathrooms').value;
+            
+            const data = {
+                area: parseFloat(area),
+                bedrooms: parseInt(bedrooms),
+                bathrooms: parseInt(bathrooms)
+            };
+            
+            console.log('Sending data:', data);
+            
+            try {
+                const response = await axios.post('/predict', data);
+                console.log('Response:', response);
+                document.getElementById('prediction-result').innerText = `Predicted Price: $${response.data.prediction.toFixed(2)}`;
+            } catch (error) {
+                console.error('Error:', error);
+                console.error('Error response:', error.response);
+                document.getElementById('prediction-result').innerText = 'Error making prediction';
+            }
+        });
+    </script>
+</body>
+</html>
